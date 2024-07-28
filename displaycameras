@@ -72,6 +72,11 @@ if [ "$omx_timeout" = "" ]; then
 	omx_timeout=30
 fi
 
+# Ensure there is an orientation value
+if [ "$orientation" = "" ]; then
+	orientation=0
+fi
+
 # Set a variables for PID file and Display Sequence file
 PIDFILE=/var/run/displaycameras.pid
 DISPLAY_SEQUENCE_FILE=/tmp/displaycameras.seq
@@ -118,7 +123,7 @@ do
 	x=$((i+$DISPLAY_SEQUENCE))
 	if [ "$x" -ge "${#camera_names[@]}" ]; then x=$((x-${#camera_names[@]}))
 	fi
-	player="omxplayer --no-keys --no-osd --avdict rtsp_transport:tcp --win \"${window_positions[$x]}\" \"${camera_feeds[$i]}\" --live -n -1 --timeout "$omx_timeout" --dbus_name "org.mpris.MediaPlayer2.omxplayer.${camera_names[$i]}" >/dev/null &"
+	player="omxplayer --no-keys --no-osd --avdict rtsp_transport:tcp --win \"${window_positions[$x]}\" \"${camera_feeds[$i]}\" --live -n -1 --timeout "$omx_timeout" --orientation "$orientation" --dbus_name "org.mpris.MediaPlayer2.omxplayer.${camera_names[$i]}" >/dev/null &"
 	echo "Starting omxplayer for ${camera_names[$i]}"
 	eval $player
 	sleep $startsleep
@@ -220,7 +225,7 @@ do
 		x=$((i+$DISPLAY_SEQUENCE))
 		if [ "$x" -ge "${#camera_names[@]}" ]; then x=$((x-${#camera_names[@]}))
 		fi
-		player="omxplayer --no-keys --no-osd --avdict rtsp_transport:tcp --win \"${window_positions[$x]}\" \"${camera_feeds[$i]}\" --live -n -1 --timeout "$omx_timeout" --dbus_name "org.mpris.MediaPlayer2.omxplayer.${camera_names[$i]}" >/dev/null &"
+		player="omxplayer --no-keys --no-osd --avdict rtsp_transport:tcp --win \"${window_positions[$x]}\" \"${camera_feeds[$i]}\" --live -n -1 --timeout "$omx_timeout"  --orientation "$orientation" --dbus_name "org.mpris.MediaPlayer2.omxplayer.${camera_names[$i]}" >/dev/null &"
 		echo "Starting omxplayer for ${camera_names[$i]}"
 		eval $player
 		sleep $startsleep
